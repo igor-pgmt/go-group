@@ -16,21 +16,29 @@ ___
 
 предполагается, что даты (параметр **date**) могут могут быть в широком диапазоне, включая "до нашей эры". Даты подобного вида могут иметь различный формат представления (префиксы или постфиксы BC, AD и т.п.); мы будем использовать соответствующую дату с префиксом "-".
 
-Так же, предполагается, что: 
-**geo** - параметр всегда имеет две буквы верхнего регистра определённого множества корректных комбинаций;
-**zone** - положительное целое число, максимальный объём - 64 бит;
-**impressions** - целое число из диапазона [0:100];
+Так же, предполагается, что:  
+**geo** - параметр всегда имеет две буквы верхнего регистра определённого множества корректных комбинаций;  
+**zone** - положительное целое число, максимальный объём - 64 бит;  
+**impressions** - целое число из диапазона [0:100];  
 **revenue** - число с плавающей точкой c двумя знаками после запятой из диапазона [-1:1];
 
 ### Предварительные требования
-Программа предполагает наличие базы данных MySQL на localhost с двумя заранее созданными таблицами: t1 и t2:
+Программа предполагает наличие СУБД MySQL на localhost с двумя заранее созданными базой данных и таблицами: t1 и t2:
+```
+echo "CREATE DATABASE test 
+CHARACTER SET utf8 
+COLLATE utf8_general_ci;
+" | mysql -uroot -p777
+```
 ```
 CREATE TABLE `test`.`t1` ( `date` VARCHAR(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , `geo` VARCHAR(2) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , `zone` INT NOT NULL , `impressions` INT NOT NULL , `revenue` FLOAT NOT NULL, unique key(`date`,`geo`,`zone`)) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
 ```
 ```
 CREATE TABLE `test`.`t2` ( `date` VARCHAR(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , `geo` VARCHAR(2) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , `zone` INT NOT NULL , `impressions` INT NOT NULL , `revenue` FLOAT NOT NULL, unique key(`date`,`geo`,`zone`)) ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_general_ci;
 ```
-Таблица t1 используется для хранения результирующих данных. Она может быть пустой или уже содержать некоторые данные (заранее корректного формата). Пример данных [здесь](https://github.com/igor-pgmt/go-group/blob/master/t1.sql); по желанию можно произвести импорт в таблицу t1 перед началом тестирования программы.
+Таблица t1 используется для хранения результирующих данных. Она может быть пустой или уже содержать некоторые данные (заранее корректного формата). Пример данных [здесь](https://github.com/igor-pgmt/go-group/blob/master/t1.sql); по желанию можно произвести импорт в таблицу t1 перед началом тестирования программы:
+
+![mysql](https://github.com/igor-pgmt/go-group/blob/master/gifs/go-mysql.gif)
 
 ### Использование программы
 Скачать и скомпилировать:
@@ -40,6 +48,7 @@ cd go-group
 go build
 ```
 ![build](https://github.com/igor-pgmt/go-group/blob/master/gifs/go-build.gif)
+
 После этого программа готова к работе.
 
 Программа обладает возможностью генерировать тестовые данные (реализовано в файле [datagen.go](https://github.com/igor-pgmt/go-group/blob/master/datagen.go)). С помощью параметра **tdata**, указав директорию, программа сгенерирует тестовые данные в этой директории (создаст директорию, если отсутствует):
@@ -47,6 +56,7 @@ go build
 ./go-group -tdata test
 ```
 ![test data generation](https://github.com/igor-pgmt/go-group/blob/master/gifs/go-tdata.gif)
+
 Поиск файлов csv, группировка данных и импорт в БД осуществляется с помощью одновременного указания ключей **dir** (директория для поиска файлов csv) и **cred** (учётные данные для доступа к БД в формате login:pass@/dbname):
 ```terminal
 ./go-group -dir test -cred root:123@/test
