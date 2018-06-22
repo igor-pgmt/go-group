@@ -39,18 +39,20 @@ git clone https://github.com/igor-pgmt/go-group.git
 cd go-group
 go build
 ```
+![build](https://github.com/igor-pgmt/go-group/blob/master/gifs/go-build.gif)
 После этого программа готова к работе.
 
 Программа обладает возможностью генерировать тестовые данные (реализовано в файле [datagen.go](https://github.com/igor-pgmt/go-group/blob/master/datagen.go)). С помощью параметра **tdata**, указав директорию, программа сгенерирует тестовые данные в этой директории (создаст директорию, если отсутствует):
 ```terminal
 ./go-group -tdata test
 ```
-
+![test data generation](https://github.com/igor-pgmt/go-group/blob/master/gifs/go-tdata.gif)
 Поиск файлов csv, группировка данных и импорт в БД осуществляется с помощью одновременного указания ключей **dir** (директория для поиска файлов csv) и **cred** (учётные данные для доступа к БД в формате login:pass@/dbname):
 ```terminal
 ./go-group -dir test -cred root:123@/test
 ```
 Следует указать БД, содержащую таблицы, t1 и t2, созданные ранее.
+![grouping](https://github.com/igor-pgmt/go-group/blob/master/gifs/go-group.gif)
 
 При запуске данной команды, программа произведёт следующие действия:
 - Поиск файлов csv в указанной директории
