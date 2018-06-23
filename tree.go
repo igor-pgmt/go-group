@@ -113,32 +113,24 @@ func (t *Tree) Add(n *Node) int64 {
 		writeBytes(t.File, findedNode)
 		return findedNode.This
 	} else if findedNode == nil && parentNode != nil {
-		newNode := new(Node)
-		newNode.Data = n.Data
-		newNode.This = t.Counter
-		newNode.Left = n.Left
-		newNode.Right = n.Right
+		n.This = t.Counter
 		if strings.Join(strings.Split(string(n.Data[:]), ",")[:3], ",") > strings.Join(strings.Split(string(parentNode.Data[:]), ",")[:3], ",") {
-			parentNode.Right = newNode.This
+			parentNode.Right = n.This
 		} else {
-			parentNode.Left = newNode.This
+			parentNode.Left = n.This
 		}
 		t.Counter += 64
-		writeBytes(t.File, newNode)
+		writeBytes(t.File, n)
 		writeBytes(t.File, parentNode)
 
-		return newNode.This
+		return n.This
 	}
-	newNode := new(Node)
-	newNode.Data = n.Data
-	newNode.This = t.Counter
-	newNode.Left = n.Left
-	newNode.Right = n.Right
-	t.Root = newNode
-	t.Counter += 64
-	writeBytes(t.File, newNode)
 
-	return newNode.This
+	t.Root = n
+	t.Counter += 64
+	writeBytes(t.File, n)
+
+	return n.This
 }
 
 // writeBytes записывает данные в файл
